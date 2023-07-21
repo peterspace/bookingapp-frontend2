@@ -25,7 +25,7 @@ export default function PlacePage({ place }) {
         <AddressLink>{place.address}</AddressLink>
         <PlaceGallery place={place} />
         <div className="mt-8 mb-8 grid gap-8 grid-cols-1 md:grid-cols-[2fr_1fr]">
-          <div>
+          {/* <div>
             <div className="my-4">
               <h2 className="font-semibold text-2xl">Description</h2>
               {place.description}
@@ -35,8 +35,8 @@ export default function PlacePage({ place }) {
             Check-out: {place.checkOut}
             <br />
             Max number of guests: {place.maxGuests}
-          </div>
-          <div>
+          </div> */}
+          <div className='mt-4 w-[600px]'>
             <BookingWidget place={place} />
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function PlacePage({ place }) {
         <h2 className="text-xl text-gray-900">guestCity: {guestCity?.city}</h2> */}
         {/* <h2 className="text-xl text-gray-900">Time in Russia: {russiaTime}</h2>
         <h2 className="text-xl text-gray-500">Time in Dubai: {dubaiTime}</h2> */}
-        <h2 className="text-xl text-gray-500">CheckIn Russia: {russiaCheckIn}</h2>
+        {/* <h2 className="text-xl text-gray-500">CheckIn Russia: {russiaCheckIn}</h2> */}
         {/* <h2 className="text-xl text-gray-500">CheckIn Dubai: {dubaiTime}</h2> */}
       </>
     </div>

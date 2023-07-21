@@ -87,9 +87,7 @@ export default function BookingWidget({ place }) {
       phone,
       place: place?.place, // placeId for room
       room: place?._id, // roomId
-      numberOfNights,
-      price: place?.price,
-      totalPrice: numberOfNights * place?.price,
+      price: numberOfNights * place?.price,
       paymentMethod,
       owner: place?.owner,
       // userId: currentUser._id,
@@ -180,7 +178,7 @@ export default function BookingWidget({ place }) {
         </div>
         <div className="bg-primary p-6 text-white rounded-2xl">
           <div>Total price</div>
-          <div className="text-3xl">${numberOfNights * place?.price}</div>
+          <div className="text-3xl">${place?.price}</div>
         </div>
       </div>
 
