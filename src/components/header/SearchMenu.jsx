@@ -28,19 +28,19 @@ import {
   setGuestName,
   setGuestPhone,
   setRoomType,
-setRoomNumber
+  setRoomNumber,
 } from '../../redux/features/booking/bookingSlice';
 import { useDispatch } from 'react-redux';
 
 const cities = [
   {
+    name: 'dubai',
+  },
+  {
     name: 'moscow',
   },
   {
     name: 'saint-petersburg',
-  },
-  {
-    name: 'dubai',
   },
 ];
 
@@ -64,10 +64,10 @@ const propertyTypes = [
 
 const roomTypes = [
   {
-    name: 'Studio',
+    name: 'Standard',
   },
   {
-    name: 'Standard',
+    name: 'Studio',
   },
   {
     name: 'Superior',
