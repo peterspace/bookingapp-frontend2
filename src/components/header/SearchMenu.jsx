@@ -1,12 +1,4 @@
-import {
-  faBed,
-  faCalendarDays,
-  faCar,
-  faPerson,
-  faPlane,
-  faTaxi,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { DateRange } from 'react-date-range';
 import { useEffect, useState } from 'react';
 // import { useContext, useState } from "react";
@@ -32,63 +24,78 @@ import {
 } from '../../redux/features/booking/bookingSlice';
 import { useDispatch } from 'react-redux';
 
-const cities = [
-  {
-    name: 'dubai',
-  },
-  {
-    name: 'moscow',
-  },
-  {
-    name: 'saint-petersburg',
-  },
-];
+// const cities = [
+//   {
+//     name: 'dubai',
+//   },
+//   {
+//     name: 'moscow',
+//   },
+//   {
+//     name: 'saint-petersburg',
+//   },
+// ];
 
-const propertyTypes = [
-  {
-    name: 'hotel',
-  },
-  {
-    name: 'hotelApart',
-  },
-  {
-    name: 'apartment',
-  },
-  {
-    name: 'resort',
-  },
-  // {
-  //   name: 'villa',
-  // },
-];
+// const propertyTypes = [
+//   {
+//     name: 'hotel',
+//   },
+//   {
+//     name: 'hotelApart',
+//   },
+//   {
+//     name: 'apartment',
+//   },
+//   {
+//     name: 'resort',
+//   },
+// ];
 
-const roomTypes = [
-  {
-    name: 'Standard',
-  },
-  {
-    name: 'Studio',
-  },
-  {
-    name: 'Superior',
-  },
-  {
-    name: 'Delux',
-  },
-  {
-    name: 'Suite',
-  },
-];
+// const roomTypes = [
+//   {
+//     name: 'Standard',
+//   },
+//   {
+//     name: 'Studio',
+//   },
+//   {
+//     name: 'Superior',
+//   },
+//   {
+//     name: 'Delux',
+//   },
+//   {
+//     name: 'Suite',
+//   },
+// ];
 
-const SearchMenu = () => {
+const SearchMenu = (props) => {
+  const {
+    updateCheckIn,
+    updateCheckOut,
+    updatetNumberOfGuests,
+    updateCity,
+    updateType,
+    updateRoomType,
+    cities,
+    propertyTypes,
+    roomTypes,
+    checkIn,
+    checkOut,
+    numberOfGuests,
+    city,
+    type,
+    roomType,
+    setShowPlace,
+  } = props;
   const dispatch = useDispatch();
 
-  const [checkIn, updateCheckIn] = useState('');
-  const [checkOut, updateCheckOut] = useState('');
-  const [numberOfGuests, updatetNumberOfGuests] = useState(1);
-  const [city, updateCity] = useState(cities[0].name);
-  const [type, updateType] = useState(propertyTypes[0].name);
-  const [roomType, updateRoomType] = useState(roomTypes[0].name);
+  // const [checkIn, updateCheckIn] = useState('');
+  // const [checkOut, updateCheckOut] = useState('');
+  // const [numberOfGuests, updatetNumberOfGuests] = useState(1);
+  // const [city, updateCity] = useState(cities[0].name);
+  // const [type, updateType] = useState(propertyTypes[0].name);
+  // const [roomType, updateRoomType] = useState(roomTypes[0].name);
 
   // using defailt guest number as 1
   useEffect(() => {
@@ -198,7 +205,7 @@ const SearchMenu = () => {
               }}
             />
           </div>
-          <div className="flex flex-col py-3 px-4 border-l">
+          {/* <div className="flex flex-col py-3 px-4 border-l">
             <label>Find</label>
             <Link
               to={'/landingPage'}
@@ -219,6 +226,29 @@ const SearchMenu = () => {
                 ></path>
               </svg>
             </Link>
+          </div> */}
+          <div className="flex flex-col py-3 px-4 border-l">
+            <label>Find</label>
+            <div
+              // to={'/landingPage'}
+              className="btn-primary px-3 py-2 mr-20 rounded-lg"
+              onClick={() => setShowPlace(false)}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
+            </div>
           </div>
         </div>
       </div>

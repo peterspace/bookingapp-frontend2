@@ -27,6 +27,56 @@ import {
   getAllAvailableRooms,
 } from '../redux/features/place/placeSlice.js';
 
+import SearchMenu from '../components/header/SearchMenu.jsx';
+
+const cities = [
+  {
+    name: 'dubai',
+  },
+  {
+    name: 'moscow',
+  },
+  {
+    name: 'saint-petersburg',
+  },
+];
+
+const propertyTypes = [
+  {
+    name: 'hotel',
+  },
+  {
+    name: 'hotelApart',
+  },
+  {
+    name: 'apartment',
+  },
+  {
+    name: 'resort',
+  },
+  // {
+  //   name: 'villa',
+  // },
+];
+
+const roomTypes = [
+  {
+    name: 'Standard',
+  },
+  {
+    name: 'Studio',
+  },
+  {
+    name: 'Superior',
+  },
+  {
+    name: 'Delux',
+  },
+  {
+    name: 'Suite',
+  },
+];
+
 export default function LandingPage() {
   // const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -52,25 +102,25 @@ export default function LandingPage() {
   console.log({ allRoomsL: allRoomsL });
 
   const [newPlace, setNewPlace] = useState({});
-  // console.log({newPlace:newPlace})
+  console.log({ newPlace: newPlace });
   const [showBooking, setShowBooking] = useState(false);
   const [showPlaceReady, setShowPlaceReady] = useState(false);
   const [showPlace, setShowPlace] = useState(false);
 
-  const propertyType =
-    useSelector((state) => state?.booking?.type?.type) || null;
-  console.log({ propertyType: propertyType });
+  // const propertyType =
+  //   useSelector((state) => state?.booking?.type?.type) || null;
+  // console.log({ propertyType: propertyType });
 
-  const roomType =
-    useSelector((state) => state?.booking?.roomType?.type) || null;
-  console.log({ roomType: roomType });
+  // const roomType =
+  //   useSelector((state) => state?.booking?.roomType?.type) || null;
+  // console.log({ roomType: roomType });
 
-  const city = useSelector((state) => state?.booking?.city?.city) || null;
-  console.log({ city: city });
+  // const city = useSelector((state) => state?.booking?.city?.city) || null;
+  // console.log({ city: city });
 
-  const maxGuests =
-    useSelector((state) => state?.booking?.guestNumber?.guestNumber) || 1;
-  console.log({ maxGuests: maxGuests });
+  // const maxGuests =
+  //   useSelector((state) => state?.booking?.guestNumber?.guestNumber) || 1;
+  // console.log({ maxGuests: maxGuests });
 
   // const startPrice = useSelector((state) => state?.booking?.startPrice?.startPrice) || null;
   // console.log({ startPrice: startPrice });
@@ -78,7 +128,84 @@ export default function LandingPage() {
   // const endPrice = useSelector((state) => state?.booking?.endPrice?.endPrice) || null;
   // console.log({ endPrice: endPrice });
 
+  const [checkIn, updateCheckIn] = useState('');
+  console.log({ checkIn: checkIn });
+  const [checkOut, updateCheckOut] = useState('');
+  console.log({ checkOut: checkOut });
+
+  const numberOfGuestsL = localStorage.getItem('maxGuests')
+    ? JSON.parse(localStorage.getItem('maxGuests'))
+    : 1;
+  const [numberOfGuests, updatetNumberOfGuests] = useState(numberOfGuestsL);
+  const maxGuests = Number(numberOfGuests);
+
+  console.log({ maxGuests: maxGuests });
+  // const [city, updateCity] = useState(cities[0].name);
+  // const [city, updateCity] = useState(cities[0].name);
+  const cityL = localStorage.getItem('city')
+    ? JSON.parse(localStorage.getItem('city'))
+    : cities[0].name;
+  const [city, updateCity] = useState(cityL);
+  console.log({ city: city });
+
+  const typeL = localStorage.getItem('type')
+    ? JSON.parse(localStorage.getItem('type'))
+    : propertyTypes[0].name;
+  const [type, updateType] = useState(typeL);
+  const propertyType = type;
+  console.log({ propertyType: propertyType });
+
+  const roomTypeL = localStorage.getItem('roomType')
+    ? JSON.parse(localStorage.getItem('roomType'))
+    : roomTypes[0].name;
+  const [roomType, updateRoomType] = useState(roomTypeL);
+  console.log({ roomType: roomType });
+
   const [filteredData, setFilteredData] = useState([]);
+
+  console.log({ filteredData: filteredData });
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     updateCity(cities[2].name);
+  //   }, 200);
+  // }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!cityL) {
+        updateCity(cities[2].name);
+      } else {
+        updateCity(cityL);
+        // updateCity(cityL);
+        // filterUserData();
+      }
+    }, 200);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('city', JSON.stringify(city));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [city]);
+
+  useEffect(() => {
+    localStorage.setItem('propertyType', JSON.stringify(type));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
+
+  useEffect(() => {
+    localStorage.setItem('roomType', JSON.stringify(roomType));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomType]);
+
+  useEffect(() => {
+    localStorage.setItem('maxGuests', JSON.stringify(maxGuests));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [maxGuests]);
 
   useEffect(() => {
     dispatch(getAllRooms());
@@ -94,17 +221,17 @@ export default function LandingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPlace]);
 
-  const handleSelect = () => {
-    if (showBooking === true) {
-      let id = newPlace._id;
-      console.log('newPlaceId', id);
-      console.log('generatedPlace', newPlace);
-      // navigate(`/place/${id}`);
-      setShowBooking(false);
-      // setShowPlaceReady(true);
-      setShowPlace(true);
-    }
-  };
+  // const handleSelect = () => {
+  //   if (showBooking === true) {
+  //     let id = newPlace._id;
+  //     console.log('newPlaceId', id);
+  //     console.log('generatedPlace', newPlace);
+  //     // navigate(`/place/${id}`);
+  //     // setShowPlace(true);
+  //     setShowBooking(false);
+  //     setShowPlace(true);
+  //   }
+  // };
 
   // useEffect(() => {
   //   if (allRoomsL !== undefined) {
@@ -118,7 +245,33 @@ export default function LandingPage() {
       filterUserData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [city, propertyType, roomType, maxGuests]);
+  }, [city, propertyType, roomType, numberOfGuests]);
+
+  //==={if refresh}
+  // useEffect(() => {
+  //   if (allRoomsL !== undefined) {
+  //     filterUserData();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     if (!city) {
+  //       filterUserData();
+  //     }
+  //   }, 200);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     if (city && !filteredData) {
+  //       filterUserData();
+  //     }
+  //   }, 200);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   function filterUserData() {
     const userData = allRoomsL?.filter((item) => {
@@ -145,8 +298,35 @@ export default function LandingPage() {
 
   return (
     <>
+      <SearchMenu
+        updateCheckIn={updateCheckIn}
+        updateCheckOut={updateCheckOut}
+        updatetNumberOfGuests={updatetNumberOfGuests}
+        updateCity={updateCity}
+        updateType={updateType}
+        updateRoomType={updateRoomType}
+        cities={cities}
+        propertyTypes={propertyTypes}
+        roomTypes={roomTypes}
+        checkIn={checkIn}
+        checkOut={checkOut}
+        numberOfGuests={numberOfGuests}
+        city={city}
+        type={type}
+        roomType={roomType}
+        setShowPlace={setShowPlace}
+        // setShowPlaceReady={setShowPlaceReady}
+      />
       {showPlace ? (
-        <PlacePage place={newPlace} />
+        <PlacePage
+          place={newPlace}
+          checkIn={checkIn}
+          checkOut={checkOut}
+          guestNumber={numberOfGuests}
+          guestCity={city}
+          // type={type}
+          roomType={roomType}
+        />
       ) : (
         <>
           {' '}
@@ -172,9 +352,8 @@ export default function LandingPage() {
                   key={index}
                   onClick={() => {
                     setNewPlace(place);
+                    // setShowPlace(true);
                     setShowBooking(true);
-                    // handleSubmit();
-                    // handleSelect()
                   }}
                 >
                   {/* <Link to={'/place/' + place._id} key={index}> */}
@@ -332,7 +511,11 @@ export default function LandingPage() {
                         <div className=" bg-blue-500 rounded-lg px-2 py-2 w-[150px] flex flex-row hover:opacity-90 mt-4">
                           <div
                             className="text-white"
-                            onClick={() => handleSelect()}
+                            // onClick={() => handleSelect()}
+                            onClick={() => {
+                              setShowPlace(true);
+                              setShowBooking(false);
+                            }}
                           >
                             See availability
                           </div>

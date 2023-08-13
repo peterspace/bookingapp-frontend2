@@ -1,12 +1,4 @@
-import {
-  faBed,
-  faCalendarDays,
-  faCar,
-  faPerson,
-  faPlane,
-  faTaxi,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { DateRange } from 'react-date-range';
 import { useEffect, useState } from 'react';
 // import { useContext, useState } from "react";

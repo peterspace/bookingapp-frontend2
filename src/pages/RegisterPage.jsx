@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { SetLogin } from '../redux/features/auth/authSlice';
 
@@ -10,6 +10,7 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [redirect, setRedirect] = useState(false);
   const dispatch = useDispatch();
 
   async function RegisterUser(ev) {
@@ -35,13 +36,22 @@ export default function RegisterPage() {
     try {
       const data = await registerUser(userData);
       console.log(data);
-      dispatch(SetLogin(true));
-      // await dispatch(SetName(data.name));
+      if(data){
+        localStorage.setItem('isLoggedIn', JSON.stringify(true));
+        localStorage.setItem('user', JSON.stringify(data));
+      }
       alert('Registration successful. Now you can log in');
+      setRedirect(true);
     } catch (e) {
       alert('Registration failed. Please try again later');
     }
   }
+
+  if (redirect) {
+    // return <Navigate to={'/landingPage'} />;
+    return <Navigate to={'/login'} />;
+  }
+
   return (
     <div className="mt-4 grow flex items-center justify-around">
       <div className="mb-64">

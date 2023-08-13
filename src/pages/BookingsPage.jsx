@@ -4,17 +4,82 @@ import axios from 'axios';
 import PlaceImg from '../PlaceImg';
 import { Link } from 'react-router-dom';
 import BookingDates from '../BookingDates';
-import { getUserBookings } from '../services/apiService';
-
+import {
+  getUserBookings,
+  updateBookingsAutomatically,
+} from '../services/apiService';
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
-  
+
   useEffect(() => {
     getUserBookings().then((response) => {
       setBookings(response);
     });
   }, []);
+
+  //======{The initial status after booking is  "pending"}========================
+  //======{The admin will update status to from "pending" to "paid" once payement is confirmed}========================
+  //==={This system will Automatically update status to " Active, Completed, Canceled" using the underlined lines of codes}===========================
+
+  //==={set intervals for regular updates}=========
+
+  // useEffect(() => {
+  //   statusUpdate();
+  // }, [bookings]);
+
+  // useEffect(() => {
+  //   statusUpdate();
+  // }, []);
+
+  async function statusUpdate() {
+    bookings?.map(async (booking) => {
+      let checkOut = booking?.checkOut;
+      let currentTime = new Date(Date.now());
+
+      let newStatus;
+
+      if (
+        checkOut > currentTime &&
+        booking?.status !== 'Pending' &&
+        booking?.status !== 'Cancel' &&
+        booking?.status !== 'Completed' &&
+        booking?.status === 'Paid'
+      ) {
+        newStatus = 'Active';
+      }
+      //==={Is Completed}==================
+
+      if (checkOut < currentTime && booking?.status === 'Paid') {
+        newStatus = 'Completed';
+      }
+      //==={Is Canceled}==================
+      if (checkOut < currentTime && booking?.status !== 'Paid') {
+        newStatus = 'Cancel';
+      }
+
+      const userData = {
+        id: booking._id, // new
+        place: booking.place,
+        // place: booking.place?._id,
+        room: booking?.room?._id,
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        numberOfGuests: booking.numberOfGuests,
+        name: booking.name,
+        phone: booking.phone,
+        price: booking.price,
+        paymentMethod: booking.paymentMethod,
+        owner: booking.owner,
+        status: newStatus, // new update
+      };
+
+      console.log('userData:', userData);
+      updateBookingsAutomatically(userData).then((response) => {
+        console.log(response);
+      });
+    });
+  }
 
   return (
     <div>

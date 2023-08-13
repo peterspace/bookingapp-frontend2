@@ -19,9 +19,6 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirect, setRedirect] = useState(false);
-  const [loggedInUserId, setLoggedInUserId] = useState('');
-
-  // const { setUser } = useContext(UserContext);
 
   const dispatch = useDispatch();
 
@@ -44,16 +41,11 @@ export default function AdminLoginPage() {
     try {
       const data = await loginUser(userData);
       console.log(data);
-      dispatch(SetEmail(data?.email));
-      dispatch(SetLogin(true));
-      dispatch(SetName(data.name));
-      setLoggedInUserId(data._id);
-      dispatch(SetRole(data?.role));
-      console.log('loggedInUserId', loggedInUserId);
-      dispatch(setOwnerId(data._id));
-      dispatch(SetUserId(data._id));
-      // console.log("activeOwnerId:", activeOwnerId);
 
+      if (data) {
+        localStorage.setItem('isLoggedIn', JSON.stringify(true));
+        localStorage.setItem('user', JSON.stringify(data));
+      }
       alert('Login successful');
       setRedirect(true);
     } catch (e) {
@@ -62,7 +54,7 @@ export default function AdminLoginPage() {
   }
 
   if (redirect) {
-    return <Navigate to={'/'} />;
+    return <Navigate to={'/admin/account/places'} />;
   }
 
   return (
@@ -85,7 +77,7 @@ export default function AdminLoginPage() {
           <button className="primary">Login</button>
           <div className="text-center py-2 text-gray-500">
             Don't have an account yet?{' '}
-            <Link className="underline text-black" to={'/register/admin'}>
+            <Link className="underline text-black" to={'/admin/register'}>
               Register now
             </Link>
           </div>

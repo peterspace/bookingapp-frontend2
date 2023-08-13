@@ -8,9 +8,14 @@ import { getAllRooms } from '../redux/features/place/placeSlice';
 // Admin only page
 export default function RoomsPage({ place }) {
   const dispatch = useDispatch()
-  const [rooms, setRooms] = useState([]);
   const allRoomsL = useSelector((state) => state?.place?.fetchedAllRooms);
+  
   console.log({allRoom: allRoomsL})
+  const [rooms, setRooms] = useState([]);
+  console.log({rooms: rooms})
+
+  
+
 
   const placeId = place?._id;
 
@@ -33,7 +38,7 @@ export default function RoomsPage({ place }) {
         <div className="text-center">
           <Link
             className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
-            to={`/account/rooms/new`}
+            to={`/admin/account/rooms/new`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +61,7 @@ export default function RoomsPage({ place }) {
             rooms.map((room, index) => (
               <Link
                 key={index}
-                to={'/account/rooms/' + room._id}
+                to={'/admin/account/rooms/' + room._id}
                 className="flex cursor-pointer gap-4 p-4"
               >
                 <div className="flex flex-row bg-gray-200 rounded-2xl overflow-hidden gap-10 ml-10 border border-gray-50 shadow-md">

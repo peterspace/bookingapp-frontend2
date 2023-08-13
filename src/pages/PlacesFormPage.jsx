@@ -182,7 +182,7 @@ export default function PlacesFormPage() {
   }
   // for admin only
   if (redirect) {
-    return <Navigate to={'/account/places'} />;
+    return <Navigate to={'/admin/account/places'} />;
   }
 
   // TODO: add/ update rooms tab

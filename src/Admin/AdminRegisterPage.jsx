@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { SetLogin } from '../redux/features/auth/authSlice';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,7 @@ export default function AdminRegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [redirect, setRedirect] = useState(false);
   const dispatch = useDispatch();
 
   async function RegisterUser(ev) {
@@ -33,12 +34,22 @@ export default function AdminRegisterPage() {
     try {
       const data = await registerUser(userData);
       console.log(data);
-      dispatch(SetLogin(true));
+
+      if(data){
+        localStorage.setItem('isLoggedIn', JSON.stringify(true));
+        localStorage.setItem('user', JSON.stringify(data));
+      }
       // await dispatch(SetName(data.name));
       alert('Registration successful. Now you can log in');
+      setRedirect(true);
     } catch (e) {
       alert('Registration failed. Please try again later');
     }
+  }
+
+  if (redirect) {
+    // return <Navigate to={'/landingPage'} />;
+    return <Navigate to={'/admin/login'} />;
   }
 
   return (
@@ -67,7 +78,7 @@ export default function AdminRegisterPage() {
           <button className="primary">Register</button>
           <div className="text-center py-2 text-gray-500">
             Already a member?{' '}
-            <Link className="underline text-black" to={'/login/admin'}>
+            <Link className="underline text-black" to={'/admin/login'}>
               Login
             </Link>
           </div>

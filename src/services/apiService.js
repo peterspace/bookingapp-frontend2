@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const validateEmail = (email) => {
@@ -274,7 +273,6 @@ export const findUser = async () => {
   }
 };
 
-
 export const getOwnerBookings = async (ownerId) => {
   try {
     const response = await axios.get(
@@ -385,6 +383,22 @@ export const updateOwnerBooking = async (userData) => {
   }
 };
 
+export const updateBookingsAutomatically = async (userData) => {
+  try {
+    const response = await axios.put(
+      `${BACKEND_URL}/bookings/updateBookingStatus`,
+      userData
+    );
+    return response.data;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
 // export const updateOwnerBooking = async (userData) => {
 //   try {
 //     const response = await axios.patch(
@@ -423,6 +437,50 @@ export const getUserRooms = async (placeId) => {
     );
     // return response.data;
     return response;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
+export const stripeCheckOut = async (userData) => {
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/payment/stripCheckout`,
+      userData
+    );
+    if (response.statusText === 'OK') {
+      toast.success('Payment successful');
+    }
+    // return response.data;
+    // return response;
+
+    return response.data.success;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
+export const stripeCheckOutSession = async (userData) => {
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/payment/create-checkout-session`,
+      userData
+    );
+    if (response.statusText === 'OK') {
+      toast.success('Payment successful');
+    }
+    // return response.data;
+    // return response;
+
+    return response.data.url;
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||

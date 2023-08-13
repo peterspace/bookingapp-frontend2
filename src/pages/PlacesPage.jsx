@@ -28,7 +28,7 @@ export default function PlacesPage() {
       <div className="text-center">
         <Link
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
-          to={'/account/places/new'}
+          to={'/admin/account/places/new'}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ export default function PlacesPage() {
           places.map((place, index) => (
             <Link
               key={index}
-              to={'/account/places/' + place._id}
+              to={'/admin/account/places/' + place._id}
               className="flex cursor-pointer gap-4 p-4"
             >
               <div className="flex flex-row bg-gray-200 rounded-2xl overflow-hidden gap-10 ml-10 border border-gray-50 shadow-md">

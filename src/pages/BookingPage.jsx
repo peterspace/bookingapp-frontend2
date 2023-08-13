@@ -5,10 +5,15 @@ import AddressLink from '../AddressLink';
 import PlaceGallery from '../PlaceGallery';
 import BookingDates from '../BookingDates';
 import { getUserBookings } from '../services/apiService';
+import { differenceInCalendarDays, format } from 'date-fns';
 
 export default function BookingPage() {
   const { id } = useParams();
   const [booking, setBooking] = useState(null);
+
+  const [numberOfNights, setNumberOfNights] = useState(null);
+
+  const [newStatus, setNewStatus] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -25,6 +30,8 @@ export default function BookingPage() {
     return '';
   }
 
+
+
   return (
     <div className="my-8">
       <h1 className="text-3xl">{booking?.room?.title}</h1>
@@ -35,16 +42,15 @@ export default function BookingPage() {
           <BookingDates booking={booking} />
         </div>
         <div className="px-3 py-2 btn-primary text-2xl rounded-2xl">
-            {booking?.status}
-          </div>
+          {booking?.status}
+        </div>
         <div className="bg-primary p-6 text-white rounded-2xl">
           <div>Total price</div>
           <div className="text-3xl">${booking?.totalPrice}</div>
         </div>
       </div>
-     
+
       <PlaceGallery place={booking?.room} />
-     
     </div>
   );
 }

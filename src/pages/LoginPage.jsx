@@ -1,20 +1,5 @@
 import { Link, Navigate } from 'react-router-dom';
 import { useState } from 'react';
-// import {
-//   SetLogin,
-//   SetName,
-//   SetRole,
-//   SetEmail,
-//   SetUserId,
-// } from '../redux/features/auth/authSlice';
-
-import {
-  SetLogin,
-  SetName,
-  SetRole,
-  SetEmail,
-  SetUserId,
-} from '../redux/features/user/userSlice';
 import { loginUser, validateEmail } from '../services/apiService';
 // import { setOwnerId, selectOwnerId } from '../redux/features/auth/bookingSlice';
 // import { useSelector } from 'react-redux';
@@ -27,13 +12,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirect, setRedirect] = useState(false);
-  const [loggedInUserId, setLoggedInUserId] = useState('');
-
-
-  // const { setUser } = useContext(UserContext);
 
   const dispatch = useDispatch();
-
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
@@ -53,26 +33,22 @@ export default function LoginPage() {
 
     try {
       const data = await loginUser(userData);
-      console.log(data);
-      dispatch(SetEmail(data?.email));
-      dispatch(SetLogin(true));
-      dispatch(SetName(data?.name));
-      setLoggedInUserId(data?._id);
-      dispatch(SetRole(data?.role));
-      console.log('loggedInUserId', loggedInUserId);
-      dispatch(SetUserId(data._id));
-      // dispatch(setOwnerId({ownerId:data._id}))
-      // console.log("activeOwnerId:", activeOwnerId);
-
+      console.log({ userData: data });
+      if(data){
+        localStorage.setItem('isLoggedIn', JSON.stringify(true));
+        localStorage.setItem('user', JSON.stringify(data));
+      }
       alert('Login successful');
       setRedirect(true);
     } catch (e) {
       alert('Login failed');
+     
     }
   }
 
   if (redirect) {
-    return <Navigate to={'/'} />;
+    // return <Navigate to={'/landingPage'} />;
+    return <Navigate to={'/account'} />;
   }
 
   return (

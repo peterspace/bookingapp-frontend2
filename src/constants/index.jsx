@@ -24,6 +24,7 @@ export const destinations = [
     propertyCount: 99,
     imageUrl: moscow,
     imageAlt: 'Moscow skyline',
+    name: 'moscow',
   },
   {
     city: 'Saint Petersburg',
@@ -31,6 +32,7 @@ export const destinations = [
     propertyCount: 117,
     imageUrl: saintpeterburg,
     imageAlt: 'Saint petersburg City',
+    name: 'saint-petersburg',
   },
 
   {
@@ -39,58 +41,62 @@ export const destinations = [
     propertyCount: 76,
     imageUrl: dubai1,
     imageAlt: 'dubai skyline',
+    name: 'dubai',
   },
 ];
 
 export const typesFeatured = [
   {
-    city: 'Hotel',
+    place: 'Hotel',
     averagePrice: 200,
     propertyCount: 99,
     imageUrl: hotel,
     imageAlt: 'hotel',
+    type: 'hotel',
+  },
+  {
+    place: 'Apartment',
+    averagePrice: 150,
+    propertyCount: 117,
+    imageUrl: apartment,
+    imageAlt: 'apartment',
+    type: 'apartment',
+  },
+
+  {
+    place: 'Resort',
+    averagePrice: 300,
+    propertyCount: 76,
+    imageUrl: resort,
+    imageAlt: 'resort',
+    type: 'resort',
+  },
+];
+
+export const ratesFeatured = [
+  {
+    city: 'Hotel',
+    averagePrice: 200,
+    propertyCount: 99,
+    imageUrl: moscow,
+    imageAlt: 'Moscow skyline',
   },
   {
     city: 'Apartment',
     averagePrice: 150,
     propertyCount: 117,
-    imageUrl: apartment,
-    imageAlt: 'apartment',
+    imageUrl: saintpeterburg,
+    imageAlt: 'Saint petersburg City',
   },
 
   {
     city: 'Resort',
     averagePrice: 300,
     propertyCount: 76,
-    imageUrl: resort,
-    imageAlt: 'resort',
+    imageUrl: dubai,
+    imageAlt: 'dubai skyline',
   },
 ];
-
-export const ratesFeatured = [
-    {
-      city: 'Hotel',
-      averagePrice: 200,
-      propertyCount: 99,
-      imageUrl: moscow,
-      imageAlt: 'Moscow skyline',
-    },
-    {
-      city: 'Apartment',
-      averagePrice: 150,
-      propertyCount: 117,
-      imageUrl: saintpeterburg,
-      imageAlt: 'Saint petersburg City',
-    },
-  
-    {
-      city: 'Resort',
-      averagePrice: 300,
-      propertyCount: 76,
-      imageUrl: dubai,
-      imageAlt: 'dubai skyline',
-    },
-  ];
 
 export const slides = [
   { url: dubai2, title: 'forest' },

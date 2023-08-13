@@ -63,7 +63,7 @@ export default function AgentLoginPage() {
   }
 
   if (redirect) {
-    return <Navigate to={'/'} />;
+    return <Navigate to={'/agent'} />;
   }
 
   return (
@@ -86,7 +86,7 @@ export default function AgentLoginPage() {
           <button className="primary">Login</button>
           <div className="text-center py-2 text-gray-500">
             Don't have an account yet?{' '}
-            <Link className="underline text-black" to={'/register/agent'}>
+            <Link className="underline text-black" to={'/agent/register'}>
               Register now
             </Link>
           </div>

@@ -5,6 +5,7 @@ import { differenceInCalendarDays, format } from 'date-fns';
 
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
 import { createBooking } from './services/apiService';
@@ -23,73 +24,53 @@ import PreBookingDates from './PreBookingDates';
 import { Notification } from './components/notification';
 
 import { findUser } from './services/apiService';
+import PayButton from './pages/payment/PayButton';
 
-export default function BookingWidget({ place }) {
-  const userLocal =
-    localStorage.getItem('user') && JSON.parse(localStorage.getItem('user'));
+import StripeContainer from './pages/payment/StripeContainer';
 
-  const [name, setName] = useState(userLocal?.name || '');
+const paymentOptions = ['card', 'qr-code'];
+
+export default function BookingWidget(props) {
+  const navigate = useNavigate();
+  const { place, checkIn, checkOut, guestNumber, guestCity, roomType } = props;
+  const user = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))
+    : null;
+
+  const [name, setName] = useState(user?.name || '');
   const [phone, setPhone] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [paymentOptions, setPaymentOptions] = useState([]);
-  const [city, setCity] = useState('');
-  const [type, setType] = useState('');
-  const [activeCheckIn, setActiveCheckIn] = useState('');
-  const [activeCheckOut, setActiveCheckOut] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0]);
+
   const [redirect, setRedirect] = useState('');
   const [currency, setCurrency] = useState('$');
   const [isBookingVisible, setIsBookingVisible] = useState(false);
   const [isPaymentCompleted, setIsPaymentCompleted] = useState(false);
-  const checkIn = useSelector(selectCheckIn);
-
-  const checkOut = useSelector(selectCheckOut);
-
-  const guestNumber = useSelector(selectGuestNumber);
-
-  const roomType = useSelector(selectType);
-  const guestCity = useSelector(selectCity);
-
-  // const [currentUser, setCurrentUser] = useState({});
-
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     setName(currentUser.name);
-  //   }
-  // }, [currentUser]);
-
-  // useEffect(() => {
-  //   GetCurrentUser();
-  // }, []);
-
-  // async function GetCurrentUser() {
-  //   const data = await findUser();
-  //   console.log(data);
-  //   console.log('userInfo:', data);
-  //   setCurrentUser(data);
-  // }
 
   let numberOfNights = 0;
-  if (checkOut?.checkOut && checkOut?.checkOut) {
+
+  if (checkOut && checkOut) {
     numberOfNights = differenceInCalendarDays(
-      new Date(checkOut?.checkOut),
-      new Date(checkIn?.checkIn)
+      new Date(checkOut),
+      new Date(checkIn)
     );
-    //  console.log("checkIn", checkIn)
   }
 
   async function BookThisPlace() {
     // setCompleted(false)
     const userData = {
-      checkIn: checkIn?.checkIn,
-      checkOut: checkOut?.checkOut,
-      numberOfGuests: guestNumber?.guestNumber,
-      name: userLocal ? userLocal?.name : name,
+      checkIn: checkIn,
+      checkOut: checkOut,
+      numberOfGuests: guestNumber,
+      name,
       phone,
       place: place?.place, // placeId for room
       room: place?._id, // roomId
       numberOfNights,
       price: place?.price,
-      totalPrice: numberOfNights * place?.price,
+      // totalPrice: numberOfNights * place?.price,
+      totalPrice:
+        differenceInCalendarDays(new Date(checkOut), new Date(checkIn)) *
+        place?.price,
       paymentMethod,
       owner: place?.owner,
       // userId: currentUser._id,
@@ -111,46 +92,12 @@ export default function BookingWidget({ place }) {
     }
   }
 
-  useEffect(() => {
-    let payOptions = place.paymentOptions;
-    if (payOptions.length > 0) {
-      setPaymentOptions(payOptions);
-      setCity(guestCity?.city);
-      setType(roomType?.type);
-      setActiveCheckIn(checkIn);
-      setActiveCheckOut(checkOut);
-      // console.log("checkIn:", checkIn?.checkIn)
-    }
-  });
-
-  useEffect(() => {
-    if (checkIn != null || undefined) {
-      setActiveCheckIn(checkIn?.checkIn);
-      // console.log("checkIn:", checkIn?.checkIn)
-    }
-    if (checkOut != null || undefined) {
-      setActiveCheckOut(checkOut?.checkOut);
-      // console.log("checkIn:", checkIn?.checkIn)
-    }
-  });
-
-  //==========={Original}=========================
-
-  // async function BookThisPlace() {
-  //   const response = await axios.post('/bookings', {
-  //     checkIn,
-  //     checkOut,
-  //     numberOfGuests,
-  //     name,
-  //     phone,
-  //     place: place._id,
-  //     price: numberOfNights * place.price,
-  //   });
-  //   const userData = response.data;
-  //   console.log('userBookingdata', userData);
-  //   const bookingId = response.data._id;
-  //   // setRedirect(`/account/bookings/${bookingId}`);
-  // }
+  // useEffect(() => {
+  //   let payOptions = place?.paymentOptions;
+  //   if (place?.paymentOptions && payOptions.length > 0) {
+  //     setPaymentOptions(payOptions);
+  //   }
+  // });
 
   if (redirect) {
     return <Navigate to={redirect} />;
@@ -162,11 +109,11 @@ export default function BookingWidget({ place }) {
         {' '}
         You are booking
         <br className="inline" />
-        <span className="text-indigo-500 ml-2">{type}</span>
+        <span className="text-indigo-500 ml-2">{roomType}</span>
         {/* <br className="inline" /> */}
         <span className="ml-2">in</span>
         {/* <br className="inline" /> */}
-        <span className="text-indigo-500 ml-2">{city}</span>
+        <span className="text-indigo-500 ml-2">{guestCity}</span>
       </p>
       <div className="text-gray-700 text-xs">
         {' '}
@@ -180,7 +127,11 @@ export default function BookingWidget({ place }) {
         </div>
         <div className="bg-primary p-6 text-white rounded-2xl">
           <div>Total price</div>
-          <div className="text-3xl">${numberOfNights * place?.price}</div>
+          <div className="text-3xl">
+            $
+            {differenceInCalendarDays(new Date(checkOut), new Date(checkIn)) *
+              place?.price}
+          </div>
         </div>
       </div>
 
@@ -191,10 +142,10 @@ export default function BookingWidget({ place }) {
       <div className="border rounded-2xl mt-4">
         <div className="flex">
           <div className="py-3 px-4">
-            <label>From: {activeCheckIn}</label>
+            <label>From: {checkIn}</label>
           </div>
           <div className="py-3 px-4 border-l">
-            <label>To: {activeCheckOut}</label>
+            <label>To: {checkOut}</label>
           </div>
         </div>
         <div className="py-3 px-4 border-t"></div>
@@ -245,16 +196,28 @@ export default function BookingWidget({ place }) {
           Confirm payment
         </button>
       ) : (
-        <button
-          onClick={() => setIsBookingVisible(true)}
-          className="primary mt-4"
-        >
-          {/* Book this place */}
-          Book
-        </button>
+        <>
+          {user.userId ? (
+            <>
+              {isBookingVisible ? null : (
+                <button
+                  onClick={() => setIsBookingVisible(true)}
+                  className="primary mt-4"
+                >
+                  {/* Book this place */}
+                  Book
+                </button>
+              )}
+            </>
+          ) : (
+            <button className="primary mt-4" onClick={() => navigate('/login')}>
+              Login to Check out
+            </button>
+          )}
+        </>
       )}
 
-      {isBookingVisible ? (
+      {paymentMethod === 'qr-code' && isBookingVisible ? (
         <>
           <div className="mt-10">
             <Notification
@@ -264,6 +227,23 @@ export default function BookingWidget({ place }) {
               currency={currency}
               setIsBookingVisible={setIsBookingVisible}
               visible={isBookingVisible}
+              setIsPaymentCompleted={setIsPaymentCompleted}
+            />
+          </div>
+        </>
+      ) : null}
+
+      {paymentMethod === 'card' && isBookingVisible ? (
+        <>
+          <div className="mt-10">
+            <StripeContainer
+              amount={
+                differenceInCalendarDays(
+                  new Date(checkOut),
+                  new Date(checkIn)
+                ) * place?.price
+              }
+              setIsBookingVisible={setIsBookingVisible}
               setIsPaymentCompleted={setIsPaymentCompleted}
             />
           </div>

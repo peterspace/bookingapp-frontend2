@@ -239,7 +239,7 @@ export default function AgentBookingsPage() {
                   {activeBookings &&
                     activeBookings.map((booking, index) => (
                       <Link
-                        to={`/account/agentbookings/${booking._id}`}
+                        to={`/admin/account/agentbookings/${booking._id}`}
                         // onClick={() => setBooking(booking)}
                         key={index}
                         className="flex gap-4 mt-8"

@@ -69,7 +69,7 @@ export default function AgentRegisterPage() {
           <button className="primary">Register Agent</button>
           <div className="text-center py-2 text-gray-500">
             Already a member?{' '}
-            <Link className="underline text-black" to={'/login/agent'}>
+            <Link className="underline text-black" to={'/agent/login'}>
               Login
             </Link>
           </div>

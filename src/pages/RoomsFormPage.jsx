@@ -6,11 +6,11 @@ import axios from 'axios';
 import AccountNav from '../AccountNav.jsx';
 // import AdminNav from '../AdminNav.jsx';
 import { Navigate, useParams } from 'react-router-dom';
-import RoomImg from '../RoomImg.jsx';
+// import RoomImg from '../RoomImg.jsx';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getAllRooms } from '../redux/features/place/placeSlice.js';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 
 const types = [
   {
@@ -41,7 +41,7 @@ const availability = [
 
 export default function RoomsFormPage() {
   const { id } = useParams();
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch();
 
   // const { placeId, id } = useParams();
   const roomId = id;
@@ -57,10 +57,9 @@ export default function RoomsFormPage() {
   console.log({ address: address });
   const description = useSelector((state) => state?.place?.description);
   console.log({ description: description });
- 
+
   const paymentOptions = useSelector((state) => state?.place?.paymentOptions);
   console.log({ paymentOptions: paymentOptions });
- 
 
   //======{Add to redux store}=====================================
   const perks = useSelector((state) => state?.place?.perks);
@@ -90,7 +89,7 @@ export default function RoomsFormPage() {
 
   // useEffect(()=>{
   //   dispatch(getAllRooms())
-   
+
   // }, [])
 
   useEffect(() => {
@@ -107,9 +106,9 @@ export default function RoomsFormPage() {
       setRoomNumber(data?.roomNumber);
       setRoomType(data?.type);
       setIsAvailable(data?.isAvailable);
-      setExtraInfo(data?.extraInfo)
-setCheckIn(data?.checkIn)
-setCheckOut(data?.checkOut)
+      setExtraInfo(data?.extraInfo);
+      setCheckIn(data?.checkIn);
+      setCheckOut(data?.checkOut);
       setRoom(data);
     });
 
@@ -143,8 +142,8 @@ setCheckOut(data?.checkOut)
       address: address,
       description: description,
       checkIn: checkIn.toString(),
-        checkOut: checkOut.toString(),
-        extraInfo,
+      checkOut: checkOut.toString(),
+      extraInfo,
       paymentOptions: paymentOptions,
       type,
       addedPhotos,
@@ -272,35 +271,35 @@ setCheckOut(data?.checkOut)
               <RoomPerks selected={roomPerks} onChange={setRoomPerks} />
             </div>
             {preInput('Extra info', 'house rules, etc')}
-                    <textarea
-                      value={extraInfo}
-                      onChange={(ev) => setExtraInfo(ev.target.value)}
-                    />
-                    {preInput(
-                      'Check in&out times',
-                      'add check in and out times, remember to have some time window for cleaning the room between guests'
-                    )}
+            <textarea
+              value={extraInfo}
+              onChange={(ev) => setExtraInfo(ev.target.value)}
+            />
+            {preInput(
+              'Check in&out times',
+              'add check in and out times, remember to have some time window for cleaning the room between guests'
+            )}
 
-                    <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
-                      <div>
-                        <h3 className="mt-2 -mb-1">Check in time</h3>
-                        <input
-                          type="number"
-                          value={checkIn}
-                          onChange={(ev) => setCheckIn(ev.target.value)}
-                          placeholder="14"
-                        />
-                      </div>
-                      <div>
-                        <h3 className="mt-2 -mb-1">Check out time</h3>
-                        <input
-                          type="number"
-                          value={checkOut}
-                          onChange={(ev) => setCheckOut(ev.target.value)}
-                          placeholder="11"
-                        />
-                      </div>
-                    </div>
+            <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
+              <div>
+                <h3 className="mt-2 -mb-1">Check in time</h3>
+                <input
+                  type="number"
+                  value={checkIn}
+                  onChange={(ev) => setCheckIn(ev.target.value)}
+                  placeholder="14"
+                />
+              </div>
+              <div>
+                <h3 className="mt-2 -mb-1">Check out time</h3>
+                <input
+                  type="number"
+                  value={checkOut}
+                  onChange={(ev) => setCheckOut(ev.target.value)}
+                  placeholder="11"
+                />
+              </div>
+            </div>
 
             <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
               <div>
