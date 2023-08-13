@@ -1,15 +1,5 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
-//================={TODO}==========================================
-// import Home from "./pages/Home/Home";
-// import Forgot from "./pages/auth/Forgot";
-// import Reset from "./pages/auth/Reset";
-// import Dashboard from "./pages/dashboard/Dashboard";
-// import Sidebar from "./components/sidebar/Sidebar";
-// import Profile from "./pages/profile/Profile";
-// import EditProfile from "./pages/profile/EditProfile";
-// import Contact from "./pages/contact/Contact";
 //================={Intermediate}==========================================
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,7 +8,7 @@ import { getLoginStatus } from './services/apiService';
 import { SetLogin } from './redux/features/auth/authSlice';
 //==============={AIR}======================================================
 import './App.css';
-import IndexPage from './pages/IndexPage.jsx';
+// import IndexPage from './pages/IndexPage.jsx';
 import LoginPage from './pages/LoginPage';
 import Layout from './Layout';
 import RegisterPage from './pages/RegisterPage';
@@ -35,29 +25,13 @@ import AdminRegisterPage from './Admin/AdminRegisterPage';
 import AdminLoginPage from './Admin/AdminLoginPage';
 import LandingPage from './pages/LandingPage';
 
-import AgentBookingPage from './agentActions/AgentBookingPage';
-import AgentBookingsPage from './agentActions/AgentBookingsPage';
-
-// import AgentPlacesPage from './pages/AgentPlacesPage';
-import AgentRegisterPage from './Agent/AgentRegisterPage';
-import AgentLoginPage from './Agent/AgentLoginPage';
-
 import LayoutAdmin from './LayoutAdmin';
 
-import LayoutAgent from './LayoutAgent';
-import LandingPageAgent from './pages/LandingPageAgent';
-import LandingPageAdmin from './pages/LandingPageAdmin';
-
 import ProfilePageAdmin from './pages/ProfilePageAdmin';
-import ProfilePageAgent from './pages/ProfilePageAgent';
 import IndexPageAdmin from './pages/IndexPageAdmin';
-import IndexPageAgent from './pages/IndexPageAgent';
 import AdminBookingsPage from './Admin/AdminBookingsPage';
 import AdminBookingPage from './Admin/AdminBookingPage';
-import PaySucess from './pages/payment/PaySuccess';
-import PayFailed from './pages/payment/PayFailed';
 
-import CheckOut from './pages/payment/Checkout';
 import Home from './components/home/Home';
 
 //==============={AIR}======================================================
@@ -86,10 +60,6 @@ function App() {
 
           <Route index element={<Home />} />
 
-
-          <Route path="/checkout" element={<CheckOut />} />
-          <Route path="/paySucess" element={<PaySucess />} />
-          <Route path="/payFailed" element={<PayFailed />} />
           <Route path="/landingPage" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -138,30 +108,6 @@ function App() {
           />
         </Route>
         {/* ==================={AGENTS ONLY}======================== */}
-        {/* <Route path="/agent" element={<LayoutAgent />}>
-          <Route index element={<IndexPageAgent />} />
-          <Route path="/agent/landingPage" element={<LandingPageAdmin />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/agent/account" element={<ProfilePageAgent />} />
-          <Route path="/account/places" element={<PlacesPage />} />
-          <Route path="/account/places/new" element={<PlacesFormPage />} />
-          <Route path="/account/places/:id" element={<PlacesFormPage />} />
-          <Route path="/account/rooms" element={<RoomsPage />} />
-          <Route path="/account/rooms/new" element={<RoomsFormPage />} />
-          <Route path="/account/rooms/:id" element={<RoomsFormPage />} />
-
-          <Route path="/agent/register" element={<AgentRegisterPage />} />
-          <Route path="/agent/login" element={<AgentLoginPage />} />
-          <Route
-            path="/account/agentbookings"
-            element={<AgentBookingsPage />}
-          />
-          <Route
-            path="/account/agentbookings/:id"
-            element={<AgentBookingPage />}
-          />
-        </Route> */}
       </Routes>
     </BrowserRouter>
   );
