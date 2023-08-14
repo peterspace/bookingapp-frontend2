@@ -198,7 +198,7 @@ export default function RoomsFormPage() {
               </h2>
               <Link
                 className="text-white bg-blue-500 px-2 py-1 rounded-lg"
-                to={'/account/places/new'}
+                to={'/admin/account/places/new'}
               >
                 Add new place
               </Link>
@@ -207,7 +207,7 @@ export default function RoomsFormPage() {
               )} */}
               <Link
                 className="text-white bg-blue-500 px-2 py-1 rounded-lg"
-                to={'/account/places/' + placeId}
+                to={'/admin/account/places/' + placeId}
               >
                 Back to place
               </Link>

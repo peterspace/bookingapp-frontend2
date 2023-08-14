@@ -58,6 +58,7 @@ export default function BookingWidget(props) {
   const [newData, setNewData] = useState('');
   console.log({ newData: newData });
 
+
   let numberOfNights = 0;
 
   if (checkOut && checkOut) {
@@ -98,18 +99,14 @@ export default function BookingWidget(props) {
       // setIsPaymentCompleted(false);
 
       // setCompleted(true)
-      let info = {
-        id: bookingId,
-        status: 'paid',
-      };
-
-      localStorage.setItem('newPaid', JSON.stringify(info));
 
       setTimeout(() => {
         setRedirect(`/account/bookings/${bookingId}`);
       }, 2000);
     }
   }
+
+
 
   useEffect(() => {
     if (isPaymentCompleted) {
@@ -124,6 +121,7 @@ export default function BookingWidget(props) {
       setTimeout(() => {
         bookingEmail();
         setIsBookingCompleted(false); // new update is booking completed
+        
       }, [1000]);
     }
   }, [isBookingCompleted]);
@@ -179,6 +177,7 @@ export default function BookingWidget(props) {
       });
     }
   }
+
 
   if (redirect) {
     return <Navigate to={redirect} />;

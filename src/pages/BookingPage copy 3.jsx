@@ -6,7 +6,6 @@ import PlaceGallery from '../PlaceGallery';
 import BookingDates from '../BookingDates';
 import { getUserBookings } from '../services/apiService';
 import { differenceInCalendarDays, format } from 'date-fns';
-import { Link } from 'react-router-dom';
 
 import { updateBookingsAutomatically } from '../services/apiService';
 
@@ -18,25 +17,33 @@ export default function BookingPage() {
   const { id } = useParams();
   const [booking, setBooking] = useState(null);
 
+  const [numberOfNights, setNumberOfNights] = useState(null);
+
+  const [newStatus, setNewStatus] = useState('');
+
+  const [isBookingCompleted, setIsBookingCompleted] = useState(false);
+  const [bookings, setBookings] = useState(null);
+
   useEffect(() => {
     if (id) {
       getUserBookings().then((response) => {
         const foundBooking = response.find(({ _id }) => _id === id);
         if (foundBooking) {
           setBooking(foundBooking);
+          setIsBookingCompleted(true);
         }
+        setBookings(foundBooking);
       });
     }
   }, [id]);
 
-  //========={Automatically confirm paid bookings update user bookings list}============
   useEffect(() => {
-    if (newPaid?.status === 'paid') {
+    if (isBookingCompleted) {
       setTimeout(() => {
         statusUpdate();
       }, 200);
     }
-  }, [newPaid]);
+  }, [isBookingCompleted]);
 
   async function statusUpdate() {
     if (booking) {
@@ -48,18 +55,14 @@ export default function BookingPage() {
 
       if (
         checkIn <= currentTime && // checkIn date is today or behind and checkout date has not reached yet
-        checkOut >= currentTime &&
-        booking?._id === newPaid?.id &&
-        newPaid?.status === 'paid'
+        checkOut >= currentTime
       ) {
         newStatusx = 'Active';
       }
 
       if (
         checkIn > currentTime && // checkIn date is ahead of now
-        checkOut > currentTime && // checkOut date is ahead of now
-        booking?._id === newPaid?.id &&
-        newPaid?.status === 'paid'
+        checkOut > currentTime // checkOut date is ahead of now
       ) {
         newStatusx = 'Inactive';
       }
@@ -85,26 +88,88 @@ export default function BookingPage() {
         console.log(response);
       });
 
-      let info = {
-        id: '',
-        status: '',
-      };
-
-      localStorage.setItem('newPaid', JSON.stringify(info));
+      // setTimeout(() => {
+      //   setRedirect(`/account/bookings/${booking?._id}`);
+      // }, 2000);
     }
   }
 
-  let numberOfNights = 0;
+  async function statusUpdateAll() {
+    bookings?.map(async (booking) => {
+      let checkIn = new Date(booking?.checkIn);
+      let checkOut = new Date(booking?.checkOut);
+      let currentTime = new Date(Date.now());
 
-  if (booking?.checkOut && booking?.checkOut) {
-    numberOfNights = differenceInCalendarDays(
-      new Date(booking?.checkOut),
-      new Date(booking?.checkIn)
-    );
-    //  console.log("checkIn", checkIn)
+      let currentStatus = booking?.status;
+
+      let newStatusx;
+
+      if (
+        checkIn <= currentTime && // checkIn date is today or behind and checkout date has not reached yet
+        checkOut >= currentTime &&
+        booking?.status === 'Paid'
+      ) {
+        newStatusx = 'Active';
+      }
+
+      if (
+        checkIn > currentTime && // checkIn date is ahead of now
+        checkOut > currentTime && // checkOut date is ahead of now
+        booking?.status === 'Paid'
+      ) {
+        newStatusx = 'Inactive';
+      }
+
+      if (
+        checkIn >= currentTime && // checkIn date is today or ahead of today
+        checkOut > currentTime && // checkOut date is ahead of today
+        booking?.status === 'Pending'
+      ) {
+        newStatusx = 'Pending';
+      }
+      //==={Is Completed}==================
+
+      if (
+        checkOut < currentTime &&
+        booking?.status !== 'Pending' &&
+        booking?.status !== 'Inactive'
+      ) {
+        newStatusx = 'Completed';
+      }
+      //==={Is Canceled}==================
+      if (
+        checkOut < currentTime &&
+        booking?.status !== 'Paid' &&
+        booking?.status !== 'Cancel'
+      ) {
+        newStatusx = 'Cancel';
+      }
+
+      if (booking?.status !== 'Paid' && booking?.status !== 'Pending') {
+        newStatusx = currentStatus;
+      }
+      const userData = {
+        id: booking._id, // new
+        place: booking.place,
+        // place: booking.place?._id,
+        room: booking?.room?._id,
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        numberOfGuests: booking.numberOfGuests,
+        name: booking.name,
+        phone: booking.phone,
+        price: booking.price,
+        paymentMethod: booking.paymentMethod,
+        owner: booking.owner,
+        status: newStatusx, // new update
+      };
+
+      console.log('userData:', userData);
+      updateBookingsAutomatically(userData).then((response) => {
+        console.log(response);
+      });
+    });
   }
-
-  //========={always update all user bookings list}============
 
   if (!booking) {
     return '';
@@ -122,33 +187,9 @@ export default function BookingPage() {
         <div className="px-3 py-2 btn-primary text-2xl rounded-2xl">
           {booking?.status}
         </div>
-        <div className="text-2xl text-center">
-          Price: ${booking.price} / per night
-        </div>
         <div className="bg-primary p-6 text-white rounded-2xl">
           <div>Total price</div>
-          <div className="text-3xl">${numberOfNights * booking.price}</div>
-        </div>
-        <div className="flex flex-row gap-6">
-          <Link to="/account/bookings">
-            <div className="transition-transform duration-300 hover:scale-125 rounded-lg cursor-pointer flex flex-row justify-center items-center bg-black hover:bg-gray-700 text-white px-3 py-2 gap-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
-                />
-              </svg>
-              Return
-            </div>
-          </Link>
+          <div className="text-3xl">${booking?.totalPrice}</div>
         </div>
       </div>
 

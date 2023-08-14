@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 body {
   background: #f0eff1;
 }
@@ -69,8 +69,8 @@ video {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: none;
-     -moz-text-size-adjust: none;
-          text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  text-size-adjust: none;
 }
 
 footer,
@@ -99,7 +99,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: "";
+  content: '';
   content: none;
 }
 
@@ -118,7 +118,8 @@ html {
   line-height: 1.25;
 }
 html body {
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 p,
@@ -259,7 +260,8 @@ a {
 }
 .banner .banner-row .row-title,
 .banner .banner-row .row-letter {
-  font-size: 28rem;
+  /* font-size: 28rem; */
+  font-size: 20rem;
   font-weight: 500;
   position: relative;
   letter-spacing: -0.8rem;
@@ -278,6 +280,29 @@ a {
   align-content: center;
   justify-content: center;
 }
+
+/* custom */
+
+/* @media (max-width: 2560px) {
+  .banner .banner-row .row-col {
+    width: 70%;
+  }
+}
+
+@media (max-width: 1920px) {
+  .banner .banner-row .row-col {
+    width: 70%;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner .banner-row .row-col {
+    width: 80%;
+  }
+} */
+
+/* custom */
+
 @media (max-width: 1440px) {
   .banner .banner-row .row-col {
     width: 70%;
@@ -297,6 +322,7 @@ a {
 .banner .banner-row .row-col .row-message {
   font-weight: 500;
   font-size: 1.8rem;
+  /* font-size: 1rem; */
   line-height: 2.6rem;
   width: 320px;
 }
@@ -356,7 +382,7 @@ a {
   margin: 0 auto;
   z-index: -100;
 } */
-.transition-image.final {
+.transition-image .final {
   display: block;
   top: -128px;
   position: relative;
@@ -365,11 +391,11 @@ a {
   z-index: -100;
 }
 @media (max-width: 480px) {
-  .transition-image.final {
+  .transition-image .final {
     top: -56px;
   }
 }
-.transition-image.final img {
+.transition-image .final img {
   width: 100%;
   max-width: 100%;
 }
@@ -482,5 +508,5 @@ body.loading {
 .loader .loader-inner .image-block img {
   width: 100%;
   -o-object-fit: fill;
-     object-fit: fill;
-}/*# sourceMappingURL=main.css.map */
+  object-fit: fill;
+} /*# sourceMappingURL=main.css.map */

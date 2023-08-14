@@ -52,11 +52,15 @@ export default function BookingWidget(props) {
   const [isPaymentCompleted, setIsPaymentCompleted] = useState(false);
   const [isBookingCompleted, setIsBookingCompleted] = useState(false);
 
+  const [newBookingId, setNewBookingId] = useState('');
+
   const [emailResponse, setEmailResponse] = useState();
   console.log({ emailResponse: emailResponse });
 
   const [newData, setNewData] = useState('');
   console.log({ newData: newData });
+  const [booking, setBooking] = useState();
+  console.log({ booking: booking });
 
   let numberOfNights = 0;
 
@@ -94,89 +98,188 @@ export default function BookingWidget(props) {
       // console.log('bookingInfo', data);
       const bookingId = data?._id;
       console.log('bookingId:', bookingId);
+      setNewBookingId(bookingId);
+
+      setBooking(data);
       setIsBookingCompleted(true); // new
       // setIsPaymentCompleted(false);
-
-      // setCompleted(true)
-      let info = {
-        id: bookingId,
-        status: 'paid',
-      };
-
-      localStorage.setItem('newPaid', JSON.stringify(info));
 
       setTimeout(() => {
         setRedirect(`/account/bookings/${bookingId}`);
       }, 2000);
     }
-  }
 
-  useEffect(() => {
-    if (isPaymentCompleted) {
-      setTimeout(() => {
-        paymentEmail();
-      }, [1000]);
+    async function BookThisPlace() {
+      // setCompleted(false)
+      const userData = {
+        checkIn: checkIn,
+        checkOut: checkOut,
+        numberOfGuests: guestNumber,
+        name,
+        phone,
+        place: place?.place, // placeId for room
+        room: place?._id, // roomId
+        numberOfNights,
+        price: place?.price,
+        // totalPrice: numberOfNights * place?.price,
+        totalPrice:
+          differenceInCalendarDays(new Date(checkOut), new Date(checkIn)) *
+          place?.price,
+        paymentMethod,
+        owner: place?.owner,
+        // userId: currentUser._id,
+      };
+
+      console.log('userBookingdata', userData);
+      const data = await createBooking(userData);
+      if (data) {
+        setBooking(data);
+        const bookingId = data?._id;
+        console.log('bookingId:', bookingId);
+        setIsBookingCompleted(true); // new
+
+        setTimeout(() => {
+          setRedirect(`/account/bookings/${bookingId}`);
+        }, 3000);
+      }
     }
-  }, [isPaymentCompleted]);
 
-  useEffect(() => {
-    if (isBookingCompleted) {
-      setTimeout(() => {
-        bookingEmail();
-        setIsBookingCompleted(false); // new update is booking completed
-      }, [1000]);
+    useEffect(() => {
+      if (isPaymentCompleted) {
+        setTimeout(() => {
+          paymentEmail();
+        }, [1000]);
+      }
+    }, [isPaymentCompleted]);
+
+    useEffect(() => {
+      if (isBookingCompleted) {
+        setTimeout(() => {
+          bookingEmail();
+          setIsBookingCompleted(false); // new update is booking completed
+          // if (booking) {
+          //   statusUpdate(); // new to consider
+          // }
+        }, [1000]);
+      }
+    }, [isBookingCompleted]);
+
+    async function bookingEmail() {
+      let userData = {
+        email: user?.email,
+        name: user?.name,
+      };
+
+      // let userData = {
+      //   email: 'peter.space.io@gmail.com',
+      //   name: 'Peter',
+      // };
+
+      setNewData(userData);
+      const response = bookingConfirmation(userData);
+
+      if (response) {
+        let promise = new Promise(function (resolve, reject) {
+          resolve(response);
+        });
+
+        promise.then((result) => {
+          console.log(result);
+          setEmailResponse(result);
+        });
+      }
     }
-  }, [isBookingCompleted]);
 
-  async function bookingEmail() {
-    let userData = {
-      email: user?.email,
-      name: user?.name,
-    };
+    async function paymentEmail() {
+      let userData = {
+        email: user?.email,
+        name: user?.name,
+      };
 
-    // let userData = {
-    //   email: 'peter.space.io@gmail.com',
-    //   name: 'Peter',
-    // };
+      // let userData = {
+      //   email: 'peter.space.io@gmail.com',
+      //   name: 'Peter',
+      // };
 
-    setNewData(userData);
-    const response = bookingConfirmation(userData);
+      setNewData(userData);
+      const response = paymentConfirmation(userData);
 
-    if (response) {
-      let promise = new Promise(function (resolve, reject) {
-        resolve(response);
-      });
+      if (response) {
+        let promise = new Promise(function (resolve, reject) {
+          resolve(response);
+        });
 
-      promise.then((result) => {
-        console.log(result);
-        setEmailResponse(result);
-      });
+        promise.then((result) => {
+          console.log(result);
+          setEmailResponse(result);
+        });
+      }
     }
-  }
 
-  async function paymentEmail() {
-    let userData = {
-      email: user?.email,
-      name: user?.name,
-    };
+    //====={Update Booking Status Automatically}================
 
-    // let userData = {
-    //   email: 'peter.space.io@gmail.com',
-    //   name: 'Peter',
-    // };
+    // useEffect(() => {
+    //   if (isBookingCompleted) {
+    //     setTimeout(() => {
+    //       statusUpdate();
+    //       setRedirect(`/account/bookings/${newBookingId}`);
+    //     }, 3000);
+    //   }
+    // }, [isBookingCompleted]);
 
-    setNewData(userData);
-    const response = paymentConfirmation(userData);
+    useEffect(() => {
+      if (isBookingCompleted) {
+        statusUpdate();
+      }
+    }, [isBookingCompleted]);
 
-    if (response) {
-      let promise = new Promise(function (resolve, reject) {
-        resolve(response);
-      });
+    async function statusUpdate() {
+      if (booking) {
+        let checkIn = new Date(booking?.checkIn);
+        let checkOut = new Date(booking?.checkOut);
+        let currentTime = new Date(Date.now());
 
-      promise.then((result) => {
-        console.log(result);
-        setEmailResponse(result);
-      });
+        let newStatusx;
+
+        if (
+          checkIn <= currentTime && // checkIn date is today or behind and checkout date has not reached yet
+          checkOut >= currentTime
+        ) {
+          newStatusx = 'Active';
+        }
+
+        if (
+          checkIn > currentTime && // checkIn date is ahead of now
+          checkOut > currentTime // checkOut date is ahead of now
+        ) {
+          newStatusx = 'Inactive';
+        }
+
+        const userData = {
+          id: booking?._id, // new
+          place: booking?.place,
+          // place: booking.place?._id,
+          room: booking?.room?._id,
+          checkIn: booking?.checkIn,
+          checkOut: booking?.checkOut,
+          numberOfGuests: booking?.numberOfGuests,
+          name: booking?.name,
+          phone: booking?.phone,
+          price: booking?.price,
+          paymentMethod: booking?.paymentMethod,
+          owner: booking?.owner,
+          status: newStatusx, // new update
+        };
+
+        console.log('userData:', userData);
+        updateBookingsAutomatically(userData).then((response) => {
+          console.log(response);
+        });
+
+        // setTimeout(() => {
+        //   setRedirect(`/account/bookings/${booking?._id}`);
+        // }, 2000);
+      }
     }
   }
 

@@ -8,6 +8,7 @@ import {
   getUserBookings,
   updateBookingsAutomatically,
 } from '../services/apiService';
+import { differenceInCalendarDays, format } from 'date-fns';
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -32,32 +33,68 @@ export default function BookingsPage() {
   //   statusUpdate();
   // }, []);
 
+  useEffect(() => {
+    statusUpdate();
+  }, [bookings]);
+
+  useEffect(() => {
+    statusUpdate();
+  }, []);
+
   async function statusUpdate() {
     bookings?.map(async (booking) => {
-      let checkOut = booking?.checkOut;
+      let checkIn = new Date(booking?.checkIn);
+      let checkOut = new Date(booking?.checkOut);
       let currentTime = new Date(Date.now());
 
-      let newStatus;
+      let currentStatus = booking?.status;
+
+      let newStatusx;
 
       if (
-        checkOut > currentTime &&
-        booking?.status !== 'Pending' &&
-        booking?.status !== 'Cancel' &&
-        booking?.status !== 'Completed' &&
+        checkIn <= currentTime && // checkIn date is today or behind and checkout date has not reached yet
+        checkOut >= currentTime &&
         booking?.status === 'Paid'
       ) {
-        newStatus = 'Active';
+        newStatusx = 'Active';
+      }
+
+      if (
+        checkIn > currentTime && // checkIn date is ahead of now
+        checkOut > currentTime && // checkOut date is ahead of now
+        booking?.status === 'Paid'
+      ) {
+        newStatusx = 'Inactive';
+      }
+
+      if (
+        checkIn >= currentTime && // checkIn date is today or ahead of today
+        checkOut > currentTime && // checkOut date is ahead of today
+        booking?.status === 'Pending'
+      ) {
+        newStatusx = 'Pending';
       }
       //==={Is Completed}==================
 
-      if (checkOut < currentTime && booking?.status === 'Paid') {
-        newStatus = 'Completed';
+      if (
+        checkOut < currentTime &&
+        booking?.status !== 'Pending' &&
+        booking?.status !== 'Inactive'
+      ) {
+        newStatusx = 'Completed';
       }
       //==={Is Canceled}==================
-      if (checkOut < currentTime && booking?.status !== 'Paid') {
-        newStatus = 'Cancel';
+      if (
+        checkOut < currentTime &&
+        booking?.status !== 'Paid' &&
+        booking?.status !== 'Cancel'
+      ) {
+        newStatusx = 'Cancel';
       }
 
+      if (booking?.status !== 'Paid' && booking?.status !== 'Pending') {
+        newStatusx = currentStatus;
+      }
       const userData = {
         id: booking._id, // new
         place: booking.place,
@@ -71,7 +108,7 @@ export default function BookingsPage() {
         price: booking.price,
         paymentMethod: booking.paymentMethod,
         owner: booking.owner,
-        status: newStatus, // new update
+        status: newStatusx, // new update
       };
 
       console.log('userData:', userData);
@@ -80,6 +117,84 @@ export default function BookingsPage() {
       });
     });
   }
+
+  const statusUpdateOnClick = async (ev) => {
+    ev.preventDefault();
+    bookings?.map(async (booking) => {
+      let checkIn = new Date(booking?.checkIn);
+      let checkOut = new Date(booking?.checkOut);
+      let currentTime = new Date(Date.now());
+
+      let currentStatus = booking?.status;
+
+      let newStatusx;
+
+      if (
+        checkIn <= currentTime && // checkIn date is today or behind and checkout date has not reached yet
+        checkOut >= currentTime &&
+        booking?.status === 'Paid'
+      ) {
+        newStatusx = 'Active';
+      }
+
+      if (
+        checkIn > currentTime && // checkIn date is ahead of now
+        checkOut > currentTime && // checkOut date is ahead of now
+        booking?.status === 'Paid'
+      ) {
+        newStatusx = 'Inactive';
+      }
+
+      if (
+        checkIn >= currentTime && // checkIn date is today or ahead of today
+        checkOut > currentTime && // checkOut date is ahead of today
+        booking?.status === 'Pending'
+      ) {
+        newStatusx = 'Pending';
+      }
+      //==={Is Completed}==================
+
+      if (
+        checkOut < currentTime &&
+        booking?.status !== 'Pending' &&
+        booking?.status !== 'Inactive'
+      ) {
+        newStatusx = 'Completed';
+      }
+      //==={Is Canceled}==================
+      if (
+        checkOut < currentTime &&
+        booking?.status !== 'Paid' &&
+        booking?.status !== 'Cancel'
+      ) {
+        newStatusx = 'Cancel';
+      }
+
+      if (booking?.status !== 'Paid' && booking?.status !== 'Pending') {
+        newStatusx = currentStatus;
+      }
+      const userData = {
+        id: booking._id, // new
+        place: booking.place,
+        // place: booking.place?._id,
+        room: booking?.room?._id,
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        numberOfGuests: booking.numberOfGuests,
+        name: booking.name,
+        phone: booking.phone,
+        price: booking.price,
+        paymentMethod: booking.paymentMethod,
+        owner: booking.owner,
+        status: newStatusx, // new update
+      };
+
+      console.log('userData:', userData);
+      updateBookingsAutomatically(userData).then((response) => {
+        console.log(response);
+      });
+    });
+  };
 
   return (
     <div>
@@ -123,7 +238,12 @@ export default function BookingsPage() {
                           />
                         </svg>
                         <span className="text-2xl">
-                          Total price: ${booking?.price}
+                          {/* Total price: ${booking?.price} */}
+                          Total price: $
+                          {differenceInCalendarDays(
+                            new Date(booking?.checkOut),
+                            new Date(booking?.checkIn)
+                          ) * booking.price}
                         </span>
                       </div>
                     </div>

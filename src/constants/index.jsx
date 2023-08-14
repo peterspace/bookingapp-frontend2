@@ -55,21 +55,21 @@ export const typesFeatured = [
     type: 'hotel',
   },
   {
-    place: 'Apartment',
+    place: 'Hotel Apart',
     averagePrice: 150,
     propertyCount: 117,
     imageUrl: apartment,
-    imageAlt: 'apartment',
-    type: 'apartment',
+    imageAlt: 'hotelApart',
+    type: 'hotelApart',
   },
 
   {
-    place: 'Resort',
+    place: 'Apartment',
     averagePrice: 300,
     propertyCount: 76,
     imageUrl: resort,
-    imageAlt: 'resort',
-    type: 'resort',
+    imageAlt: 'apartment',
+    type: 'apartment',
   },
 ];
 
@@ -79,22 +79,22 @@ export const ratesFeatured = [
     averagePrice: 200,
     propertyCount: 99,
     imageUrl: moscow,
-    imageAlt: 'Moscow skyline',
+    imageAlt: 'Hotel',
   },
   {
-    city: 'Apartment',
+    city: 'Hotel Apart',
     averagePrice: 150,
     propertyCount: 117,
     imageUrl: saintpeterburg,
-    imageAlt: 'Saint petersburg City',
+    imageAlt: 'Hotel Apart',
   },
 
   {
-    city: 'Resort',
+    city: 'Apartment',
     averagePrice: 300,
     propertyCount: 76,
     imageUrl: dubai,
-    imageAlt: 'dubai skyline',
+    imageAlt: 'Apartment',
   },
 ];
 

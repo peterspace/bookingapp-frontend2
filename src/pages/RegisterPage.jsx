@@ -1,16 +1,31 @@
 import { Link, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SetLogin } from '../redux/features/auth/authSlice';
 
-import { registerUser, validateEmail } from '../services/apiService';
+import {
+  registerUser,
+  validateEmail,
+  registrationConfirmation,
+} from '../services/apiService';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
 export default function RegisterPage() {
+  const user = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))
+    : null;
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirect, setRedirect] = useState(false);
+  const [isregisterCompleted, setIsregisterCompleted] = useState(false);
+  const [newData, setNewData] = useState('');
+  console.log({ newData: newData });
+
+  const [emailResponse, setEmailResponse] = useState();
+  console.log({ emailResponse: emailResponse });
+
   const dispatch = useDispatch();
 
   async function RegisterUser(ev) {
@@ -36,14 +51,50 @@ export default function RegisterPage() {
     try {
       const data = await registerUser(userData);
       console.log(data);
-      if(data){
+      if (data) {
         localStorage.setItem('isLoggedIn', JSON.stringify(true));
         localStorage.setItem('user', JSON.stringify(data));
+        setIsregisterCompleted(true);
       }
       alert('Registration successful. Now you can log in');
-      setRedirect(true);
+      setTimeout(() => {
+        setRedirect(true);
+      }, 2000);
     } catch (e) {
       alert('Registration failed. Please try again later');
+    }
+  }
+
+  useEffect(() => {
+    if (isregisterCompleted) {
+      setTimeout(() => {
+        registerEmail();
+      }, [1000]);
+    }
+  }, [isregisterCompleted]);
+  async function registerEmail() {
+    let userData = {
+      email: user?.email,
+      name: user?.name,
+    };
+
+    // let userData = {
+    //   email: 'peter.space.io@gmail.com',
+    //   name: 'Peter',
+    // };
+
+    setNewData(userData);
+    const response = registrationConfirmation(userData);
+
+    if (response) {
+      let promise = new Promise(function (resolve, reject) {
+        resolve(response);
+      });
+
+      promise.then((result) => {
+        console.log(result);
+        setEmailResponse(result);
+      });
     }
   }
 

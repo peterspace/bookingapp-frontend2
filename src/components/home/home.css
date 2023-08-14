@@ -261,8 +261,12 @@ a {
 .banner .banner-row .row-title,
 .banner .banner-row .row-letter {
   /* font-size: 28rem; */
-  font-size: 20rem;
-  font-weight: 500;
+  /* font-size: 20rem; */
+  /* font-weight: 500; */
+  /* font-size: 14rem; */
+  /* font-weight: 300; */
+  font-size: 12rem;
+  font-weight: 100;
   position: relative;
   letter-spacing: -0.8rem;
   display: inline-block;
@@ -308,7 +312,19 @@ a {
     width: 70%;
   }
 }
+
 @media (max-width: 1240px) {
+  .banner .banner-row .row-col {
+    width: 70%;
+  }
+}
+/* @media (max-width: 1240px) {
+  .banner .banner-row .row-col:last-child {
+    display: none;
+  }
+} */
+
+@media (max-width: 960px) {
   .banner .banner-row .row-col:last-child {
     display: none;
   }
@@ -343,11 +359,24 @@ a {
     left: 60px;
   }
 }
+
 @media (max-width: 1240px) {
+  .banner .banner-row .scroll {
+    left: 60px;
+  }
+}
+/* @media (max-width: 1240px) {
+  .banner .banner-row .scroll {
+    display: none;
+  }
+} */
+
+@media (max-width: 960px) {
   .banner .banner-row .scroll {
     display: none;
   }
 }
+
 .banner .banner-row .scroll span {
   font-size: 18px;
   font-weight: 600;

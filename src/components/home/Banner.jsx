@@ -10,6 +10,17 @@ const banner = {
   },
 };
 
+// const letterAni = {
+//   initial: { y: 400 },
+//   animate: {
+//     y: 0,
+//     transition: {
+//       ease: [0.6, 0.01, -0.05, 0.95],
+//       duration: 1,
+//     },
+//   },
+// };
+
 const letterAni = {
   initial: { y: 400 },
   animate: {
@@ -20,6 +31,7 @@ const letterAni = {
     },
   },
 };
+
 
 const Banner = () => {
   const [playMarquee, setPlayMarquee] = useState(false);

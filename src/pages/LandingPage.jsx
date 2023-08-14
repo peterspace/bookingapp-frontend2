@@ -29,6 +29,8 @@ import {
 
 import SearchMenu from '../components/header/SearchMenu.jsx';
 
+import { bookingConfirmation } from '../services/apiService.js';
+
 const cities = [
   {
     name: 'dubai',

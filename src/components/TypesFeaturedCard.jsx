@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function TypesFeaturedCard(props) {
-  const { setType, destination } = props;
+  // const { setType, destination } = props;
+  const { destination } = props;
 
   const [isRedirect, setIsRedirect] = useState(false);
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function TypesFeaturedCard(props) {
     <div
       className="transition-transform duration-300 hover:scale-110 cursor-pointer flex flex-col items-center overflow-hidden"
       onClick={() => {
-        setType(destination?.type);
+        // setType(destination?.type);
         localStorage.setItem('type', JSON.stringify(destination?.type));
         setIsRedirect(true);
       }}
